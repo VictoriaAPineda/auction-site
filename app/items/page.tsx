@@ -37,17 +37,15 @@ export default function Items () {
         fetchItems()
     },[])
     return(
-        <section>
+        <section id="itemGallery">
             {/* Error Message for data */}
             {fetchError && (<p>{fetchError}</p>)}
             {items &&(
-                <div>
+                <div className="item_container_grid">
                     {/* Array of items for Auction */}
-                    <div>
-                        {items.map( (item: AuctionItem) =>(
-                            <ItemCard key={item.id} itemData={item} />
-                        ))}
-                    </div>
+                    {items.map( (item: AuctionItem) =>(
+                        <ItemCard key={item.id} itemData={item} />
+                    ))}
                 </div>
             )}
         </section>

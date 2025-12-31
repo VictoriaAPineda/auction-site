@@ -1,4 +1,6 @@
-import "./globals.css";
+import Footer from "./components/Footer";
+import Navbar from "./components/Navbar";
+import "./globals.scss";
 
 export default function RootLayout({
   children,
@@ -7,8 +9,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+     <head>
+      <title>Auction Site</title>
+     </head>
       <body>
+        <Navbar/>
         {children}
+        <Footer/>
       </body>
     </html>
   );

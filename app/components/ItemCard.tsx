@@ -1,14 +1,21 @@
+import Image from "next/image"
 import { AuctionItem } from "../items/page"
+import itemImage from "../assets/antique_img.jpg"
+
 /* Each Auction Item */
 const ItemCard = ({itemData} :{itemData : AuctionItem}) =>{
     return(
-        <div>
+        <div className="itemCard">
+            <Image src={itemImage } alt="" width={150} loading="eager" className="itemImage" />
             {/* Item's details */}
-            <p>Category: {itemData.category}</p>
-            <p>Starting Bid Price: {itemData.startPrice}</p>
-            <p>Condition: {itemData.condition}</p>
-            <p>Description: {itemData.description}</p>
-            <p>-</p>
+            <div className="itemText">
+                <p className="itemTtle">{itemData.itemName}</p>
+                <p className="itemStartBid">Starting Bid: {itemData.startPrice}</p>
+            </div>
+            <div className="itemNavBtns">
+                <button>View Details</button>
+                <button>Bid</button>
+            </div>
         </div>
     )
 }
