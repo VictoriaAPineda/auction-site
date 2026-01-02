@@ -104,6 +104,25 @@ body {
 }
 
 /* Sell */
+#sell_container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.auction_seller_form{
+  display: flex;
+  flex-direction: column;
+  border: black 1px solid;
+  margin: 2em;
+  padding: 1em;
+  width: 50%;
+  label, button{
+    margin-top: 1em;
+  }
+}
+
+
 .conditionField{
   padding: 1em;
   
