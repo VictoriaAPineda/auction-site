@@ -21,8 +21,6 @@ export default function Sell(){
             setItemImage(e.target.files[0])
         }
     }
-    console.log(itemImage)
-    console.log(JSON.stringify(itemImage)); // null?
 
     const uploadImg = async(file:File): Promise<string | null> =>{
         console.log("enter upload img...")
@@ -73,7 +71,6 @@ export default function Sell(){
         }
     }
 
-
     return(
         <section id="sell_container">
             <p>Here Users can fill out form to sell items</p>
@@ -123,10 +120,9 @@ export default function Sell(){
 
                 {/* upload image */}
                 <input type="file" accept="image/*" onChange={handleImageFileChange} />
-               
+               {/* Submit button */}
                 <button type="submit"> Submit</button>
             </form>
-
         </section>
     )
 }
