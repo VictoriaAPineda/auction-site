@@ -2,6 +2,7 @@
 
 import { ChangeEvent, useState } from "react"
 import supabase from "../config/supabaseClient"
+import {redirect} from 'next/navigation'
 
 export default function Sell(){
     const [itemName, setItemName] = useState('')
@@ -68,6 +69,7 @@ export default function Sell(){
         }
         if(data){
             console.log(data)
+            redirect('/items')
         }
     }
 
