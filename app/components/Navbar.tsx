@@ -19,7 +19,7 @@ export default function Navbar(){
         }
     },[session])
 
-    console.log(session.session)
+    // console.log(session.session.user.email)
 
     const logout = async () =>{
         await supabase.auth.signOut();
@@ -32,17 +32,19 @@ export default function Navbar(){
             <nav className="menuNav">
                 <Link href="/"><li>[Home Logo Here]</li></Link>
                 <div className="menuRight">
-                    <Link href="/items"><li>Auction Gallery</li></Link>
-                    <Link href="/sell"><li>Sell</li></Link>
+                    <div>
+                        <Link href="/items"><li>Auction Gallery</li></Link>
+                        <Link href="/sell"><li>Sell</li></Link>
 
-                    {/* Toggle login / logout*/}
-                    {loggedin ? (
-                        <Link href=""><button onClick={logout}><li className="logBtn">Logout</li></button></Link>
-                    ):(
-                        <Link href="/login"><li className="logBtn">Login</li></Link> 
-                    )}
-
-                </div>
+                        {/* Toggle login / logout*/}
+                        {loggedin ? (
+                            <Link href=""><button onClick={logout}><li className="logBtn">Logout</li></button></Link>
+                        ):(
+                            <Link href="/login"><li className="logBtn">Login</li></Link> 
+                        )}
+                    </div>
+                    { session.sesssion != null && <li>User: {session.session.user.email}</li> }
+                </div>   
             </nav>
         </section>
     )
