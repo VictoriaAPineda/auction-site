@@ -1,14 +1,12 @@
-
-
 'use client'
 import { useEffect, useState } from "react";
 import Auth from "../components/auth";
 import supabase from "../config/supabaseClient";
 
-
 export default function Login () {
     const [session, setSession] = useState<any>(null);
 
+// maake this to a context....
     const fetchSession = async () =>{
         const currentSession = await supabase.auth.getSession();
         // supbase gets the sesssion (value : if user is logged in OR not)
@@ -30,25 +28,10 @@ export default function Login () {
         }
     },[])
 
-    const logout = async () =>{
-        await supabase.auth.signOut();
-    }
-
     return(
         <>
-            <p> This is the Sign in page </p>
-           
-            {session ? (
-                <>
-                    {/* User is currently signed in */}
-                    <button onClick={logout}>Log Out</button>
-                </>
-            ): (
-                <>
-                    {/* User needs to sign in*/}
-                    <Auth />
-                </>
-            )}
+            {/* User needs to sign in*/}
+            <Auth />
         </>
     )  
 }

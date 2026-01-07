@@ -2,6 +2,7 @@
 
 import { ChangeEvent, FormEvent, useState } from "react"
 import supabase from "../config/supabaseClient"
+import { redirect } from "next/navigation"
 
 export default function Auth(){
 
@@ -20,6 +21,7 @@ export default function Auth(){
                 console.log("There was a error signing up", signUpError.message);
                 return;
             }
+            redirect('/items')
         }else{ 
             // signing in (already a user)
             const {error : signInError} = await supabase.auth.signInWithPassword({
@@ -29,6 +31,8 @@ export default function Auth(){
                 console.log("There was a sign in error", signInError.message);
                 return;
             }
+            //reload -> redirect
+            redirect('/items')
         }
   
     }
