@@ -15,7 +15,7 @@ const ItemCard = ({itemData} :{itemData : AuctionItem}) =>{
                 <p className="itemStartBid">Starting Bid: {itemData.startPrice}</p>
             </div>
             <div className="itemNavBtns">
-                <Link href="/itemDetails" ><button>View Details</button></Link>
+                <Link href={`/itemDetails/${itemData.id}`}><button>View Details</button></Link>
                 <Link href="3"><button>Bid</button></Link>
             </div>
         </div>
