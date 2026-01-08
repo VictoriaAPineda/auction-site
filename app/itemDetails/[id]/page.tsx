@@ -1,30 +1,46 @@
-// 'use client'
+'use client'
+import supabase from "@/app/config/supabaseClient"
+import { useParams } from "next/navigation"
+import { useEffect, useState } from "react"
+import { AuctionItem } from "@/app/items/page"
+import Image from "next/image"
 
-async function getItemDetails(id:any) {
-    const res = await fetch('http://localhost:3000/itemDetails/' + id,{
-        next:{
-            revalidate: 60
+const ItemDetails = () => {
+    const [data, setData] = useState<AuctionItem>({id:"",itemName:"",condition:"",category:"",certified:false,startPrice:0,image:"",description:""})
+    const {id} = useParams()
+ 
+    useEffect(()=>{
+        const fetchItem = async () => {
+            const {data, error} = await supabase
+                .from('auction_Items')
+                .select()
+                .eq('id', id)
+                .single()
+            if(error){
+                console.log(error)
+            }
+            if(data){
+               setData(data)
+               console.log(data)
+            }
         }
-    })
-    return res.json()
-}
-// {params}:{params:{id:any}}
-export default async function ItemDetails ({params}:any) {
-    // const {item} = await getItemDetails(params.id);
-    
-    try {
-        // const {id} = await getItemDetails(params.id);
-        // console.log(id)
-        // const item = await params.id
-        // console.log(item)
-    } catch (error) {
-        // console.error(error)
-    }
+        fetchItem()
+    },[id])
 
     return(
         <section id="itemDetailsPage">
             <h1>Items Page</h1>
-            {/* <p>{item}</p> */}
+            <p>{data.id}</p>
+            <p>{data.itemName}</p>
+            <p>{data.startPrice}</p>
+            <p>{data.category}</p>
+            <p>{data.certified}</p>
+            <p>{data.condition}</p>
+            <p>{data.description}</p>
+            <Image src={data.image} alt="" width={150} height={150} loading="eager" className="itemImage" />
+
+          
         </section>
     )
 }
+export default ItemDetails;
