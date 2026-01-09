@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 /* Properties of each Auction Item */
 export interface AuctionItem {
-    id: string 
+    itemId: string 
     itemName: string
     condition: string
     category: string
@@ -13,6 +13,7 @@ export interface AuctionItem {
     startPrice: number
     image: string
     description: string
+    userId: string
 }
 /* This page will display a gallery of items that will run in auction */
 export default function Items () {
@@ -44,7 +45,7 @@ export default function Items () {
                 <div className="item_container_grid">
                     {/* Array of items for Auction */}
                     {items.map( (item: AuctionItem) =>(
-                        <ItemCard key={item.id} itemData={item} />
+                        <ItemCard key={item.itemId} itemData={item} />
                     ))}
                 </div>
             )}

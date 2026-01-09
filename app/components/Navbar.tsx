@@ -5,6 +5,16 @@ import { useContext, useEffect, useState } from "react";
 import { redirect } from "next/navigation";
 import { Session } from "../context/SessionContext";
 
+{/* Supabse -> Auth -> Sign in/Provideres -> unselect confirm email 
+** or will get a Null bug for session info */}
+async function getUserid() {
+    const {data, error} = await supabase.auth.getUser()
+    return data.user.id  
+}
+//  const id= getUserid()
+//  console.log(id)
+
+
 export default function Navbar(){
     // Track the sessions of different users
     const session = useContext(Session)
@@ -19,7 +29,13 @@ export default function Navbar(){
         }
     },[session])
 
-    // console.log(session.session.user.email)
+
+
+
+
+
+
+    // console.log( session.session.user.id)
 
     const logout = async () =>{
         await supabase.auth.signOut();
@@ -35,15 +51,17 @@ export default function Navbar(){
                     <div>
                         <Link href="/items"><li>Auction Gallery</li></Link>
                         <Link href="/sell"><li>Sell</li></Link>
-
+                        {/* view if logged in*/}
+                        <Link href="/userProfile">[Profile]</Link>
                         {/* Toggle login / logout*/}
                         {loggedin ? (
                             <Link href=""><button onClick={logout}><li className="logBtn">Logout</li></button></Link>
                         ):(
                             <Link href="/login"><li className="logBtn">Login</li></Link> 
                         )}
+                        
                     </div>
-                    { session.sesssion != null && <li>User: {session.session.user.email}</li> }
+                    {/* {session.session != null && <li>User: {session.session.user.email}</li> } */}
                 </div>   
             </nav>
         </section>

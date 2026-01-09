@@ -6,7 +6,7 @@ import { AuctionItem } from "@/app/items/page"
 import Image from "next/image"
 
 const ItemDetails = () => {
-    const [data, setData] = useState<AuctionItem>({id:"",itemName:"",condition:"",category:"",certified:false,startPrice:0,image:"",description:""})
+    const [data, setData] = useState<AuctionItem>({itemId:"",itemName:"",condition:"",category:"",certified:false,startPrice:0,image:"",description:"",userId: ""})
     const {id} = useParams()
  
     useEffect(()=>{
@@ -30,14 +30,14 @@ const ItemDetails = () => {
     return(
         <section id="itemDetailsPage">
             <h1>Items Page</h1>
-            <p>{data.id}</p>
+            <p>{data.itemId}</p>
             <p>{data.itemName}</p>
             <p>{data.startPrice}</p>
             <p>{data.category}</p>
             <p>{data.certified}</p>
             <p>{data.condition}</p>
             <p>{data.description}</p>
-            <Image src={data.image} alt="" width={150} height={150} loading="eager" className="itemImage" />
+            <Image src={data.image} alt="item image" width={150} height={150} loading="eager" className="itemImage" />
 
           
         </section>

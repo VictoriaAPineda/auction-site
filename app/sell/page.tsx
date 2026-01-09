@@ -4,6 +4,18 @@ import { ChangeEvent, useState } from "react"
 import supabase from "../config/supabaseClient"
 import {redirect} from 'next/navigation'
 
+async function getUserid() {
+    const {data : {user}, error} = await supabase.auth.getUser()
+    if(user){
+        const userID = user.id
+        return userID
+    }
+    if(error || !user){
+        console.log(error?.message)
+        return null
+    }
+}
+
 export default function Sell(){
     const [itemName, setItemName] = useState('')
     const [itemPrice, setItemPrice] = useState<number|string>('')
@@ -24,9 +36,7 @@ export default function Sell(){
     }
 
     const uploadImg = async(file:File): Promise<string | null> =>{
-        console.log("enter upload img...")
         const filePath = `${file.name}-${Date.now()}`;
-        console.log("file path: " +filePath)
         const {error} = await supabase.storage
             .from('item-image')
             .upload(filePath, file)
@@ -52,20 +62,21 @@ export default function Sell(){
 
     const handleSubmit = async(e:any)=>{
         e.preventDefault()
+        const uid = await getUserid()
 
         let imgUrl:string | null = null
         if (itemImage) {
             imgUrl = await uploadImg(itemImage)
         }
-
+        
         const {data, error} = await supabase
             .from('auction_Items')
-            .insert({itemName, condition, category, certified, startPrice:itemPrice, image:imgUrl, description:itemDescription})
+            .insert({itemName, condition, category, certified, startPrice:itemPrice, image:imgUrl, description:itemDescription, userId: uid })
             .select()
             .single()
 
         if(error){
-            console.log("Error")
+            console.log("Error" + error.message)
         }
         if(data){
             console.log(data)
