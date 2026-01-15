@@ -7,10 +7,10 @@ import { Session } from "../context/SessionContext";
 
 {/* Supabse -> Auth -> Sign in/Provideres -> unselect confirm email 
 ** or will get a Null bug for session info */}
-async function getUserid() {
-    const {data, error} = await supabase.auth.getUser()
-    return data.user.id  
-}
+// async function getUserid() {
+//     const {data, error} = await supabase.auth.getUser()
+//     return data.user.id  
+// }
 //  const id= getUserid()
 //  console.log(id)
 
@@ -29,12 +29,6 @@ export default function Navbar(){
         }
     },[session])
 
-
-
-
-
-
-
     // console.log( session.session.user.id)
 
     const logout = async () =>{
@@ -50,18 +44,19 @@ export default function Navbar(){
                 <div className="menuRight">
                     <div>
                         <Link href="/items"><li>Auction Gallery</li></Link>
-                        <Link href="/sell"><li>Sell</li></Link>
+    
                         {/* view if logged in*/}
-                        <Link href="/userProfile">[Profile]</Link>
-                        {/* Toggle login / logout*/}
+                        {loggedin && <Link href="/sell"><li>Sell</li></Link>}
+                        {loggedin &&  <Link href="/userProfile">[Profile]</Link>}
+                       
+                        {/* Toggle login / logout depending on status */}
                         {loggedin ? (
                             <Link href=""><button onClick={logout}><li className="logBtn">Logout</li></button></Link>
                         ):(
                             <Link href="/login"><li className="logBtn">Login</li></Link> 
                         )}
-                        
                     </div>
-                    {/* {session.session != null && <li>User: {session.session.user.email}</li> } */}
+                    {/* {loggedin && <li>User: {session.session.user.email}</li> } */}
                 </div>   
             </nav>
         </section>
