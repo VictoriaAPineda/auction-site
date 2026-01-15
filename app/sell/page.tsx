@@ -71,7 +71,7 @@ export default function Sell(){
         
         const {data, error} = await supabase
             .from('auction_Items')
-            .insert({itemName, condition, category, certified, startPrice:itemPrice, image:imgUrl, description:itemDescription, userId: uid })
+            .insert({itemName, condition, category, certified, startPrice:itemPrice, image:imgUrl, description:itemDescription, user_id: uid })
             .select()
             .single()
 

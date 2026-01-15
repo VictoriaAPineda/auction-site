@@ -6,7 +6,7 @@ import { AuctionItem } from "@/app/items/page"
 import Image from "next/image"
 
 const ItemDetails = () => {
-    const [data, setData] = useState<AuctionItem>({itemId:"",itemName:"",condition:"",category:"",certified:false,startPrice:0,image:"",description:"",userId: ""})
+    const [data, setData] = useState<AuctionItem>({itemId:"",itemName:"",condition:"",category:"",certified:false,startPrice:0,image:"",description:"",user_id: ""})
     const {id} = useParams()
  
     useEffect(()=>{

@@ -22,7 +22,7 @@ export default function UserProfile () {
             const {data, error} = await supabase
             .from('auction_Items')
             .select()
-            .eq('userId', uid)
+            .eq('user_id', uid)
         if(error){
             console.log("Error: " ,error)
         }
@@ -54,11 +54,11 @@ export default function UserProfile () {
             <div>
                 { data && (
                     <div>
-                        {/* TODO: Item Table format - todo: add rls policy */}
+                        {/* TODO: Item Table format */}
                         { data.map((data : AuctionItem)=>(
                             <div key={data.itemId}>
                                 <button onClick={()=>removeItem(data.itemId)} >Remove item from auction</button>
-                                <p>{data.userId}</p>
+                                <p>{data.user_id}</p>
                                 <p>{data.itemName}</p>
                                 <p>- - -</p>
                             </div>

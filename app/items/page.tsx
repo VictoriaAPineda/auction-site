@@ -13,7 +13,7 @@ export interface AuctionItem {
     startPrice: number
     image: string
     description: string
-    userId: string
+    user_id: string
 }
 /* This page will display a gallery of items that will run in auction */
 export default function Items () {
