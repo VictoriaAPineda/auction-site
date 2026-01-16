@@ -7,6 +7,7 @@ import Image from "next/image"
 
 const ItemDetails = () => {
     const [data, setData] = useState<AuctionItem>({itemId:"",itemName:"",condition:"",category:"",certified:false,startPrice:0,image:"",description:"",user_id: ""})
+    
     const {id} = useParams()
  
     useEffect(()=>{
@@ -14,7 +15,7 @@ const ItemDetails = () => {
             const {data, error} = await supabase
                 .from('auction_Items')
                 .select()
-                .eq('id', id)
+                .eq('itemId', id)
                 .single()
             if(error){
                 console.log(error)
@@ -29,7 +30,7 @@ const ItemDetails = () => {
 
     return(
         <section id="itemDetailsPage">
-            <h1>Items Page</h1>
+            <h1>Details Items Page</h1>
             <p>{data.itemId}</p>
             <p>{data.itemName}</p>
             <p>{data.startPrice}</p>

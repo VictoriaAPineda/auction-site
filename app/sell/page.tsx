@@ -17,6 +17,11 @@ async function getUserid() {
 }
 
 export default function Sell(){
+
+    let params = new URLSearchParams(document.location.search);
+    let paramId = params.get('id');
+    console.log(paramId)
+
     const [itemName, setItemName] = useState('')
     const [itemPrice, setItemPrice] = useState<number|string>('')
     const [itemDescription, setItemDescription] = useState('')
