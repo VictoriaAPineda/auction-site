@@ -1,6 +1,6 @@
 'use client'
 
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent, useEffect, useState } from "react"
 import supabase from "../config/supabaseClient"
 import {redirect} from 'next/navigation'
 
@@ -18,9 +18,32 @@ async function getUserid() {
 
 export default function Sell(){
 
-    let params = new URLSearchParams(document.location.search);
-    let paramId = params.get('id');
-    console.log(paramId)
+    // let params = new URLSearchParams(document.location.search);
+    // let itemIdForEdit = params.get('id');
+    // console.log(itemIdForEdit)
+    // const [data, setData] = useState<any>();
+
+    // useEffect(()=>{
+    //     const fetchItemDetails = async () =>{
+    //         const {data, error} = await supabase
+    //         .from('auction_Items')
+    //         .select()
+    //         .eq('itemId', itemIdForEdit)
+    //         if(error){
+    //             console.log("Error: " ,error)
+    //         }
+    //         if(data != null){
+    //            setData(data)
+    //            console.log(data)
+    //         }
+    //     }
+    //     fetchItemDetails()
+    // },[itemIdForEdit])
+
+    // console.log(data)
+    
+    /* Create states mananager/dispatcher ?
+    ** want to prefill inputs if there is any data on the item (use this as a edit page)*/
 
     const [itemName, setItemName] = useState('')
     const [itemPrice, setItemPrice] = useState<number|string>('')

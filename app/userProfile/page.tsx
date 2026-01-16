@@ -7,7 +7,7 @@ import { AuctionItem } from "../items/page";
 import Link from "next/link";
 async function getUserid() {
     const {data: {user}, error} = await supabase.auth.getUser()
-    return user.id 
+    return user?.id 
 }
 
 const uid = await getUserid();
@@ -28,7 +28,7 @@ export default function UserProfile () {
         }
         if(data){
            setData(data)
-           console.log(data)
+        //    console.log(data)
         }
     }
         fetchUserItems()
@@ -36,7 +36,6 @@ export default function UserProfile () {
 
     {/* delete */}
     const removeItem = async (idOfItem:string) =>{
-        console.log(idOfItem)
         const {error} = await supabase
             .from('auction_Items')
             .delete()

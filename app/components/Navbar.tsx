@@ -29,8 +29,6 @@ export default function Navbar(){
         }
     },[session])
 
-    // console.log( session.session.user.id)
-
     const logout = async () =>{
         await supabase.auth.signOut();
         // window.location.reload();
