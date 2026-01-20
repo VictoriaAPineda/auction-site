@@ -17,21 +17,12 @@ async function getUserid() {
 }
 
 export default function Sell(){
-
-    // let params = new URLSearchParams(document.location.search);
-    // let itemIdForEdit = params.get('id');
-    // console.log(itemIdForEdit)
-    // const [data, setData] = useState<any>();
- 
     /* TODO: 
     ** (1) Redo upload work [done]
     ** (2) Update items work [wip...]
     ** (3) add policies for update
     */
     
-    /* Create states mananager/dispatcher ?
-    ** want to prefill inputs if there is any data on the item (use this as a edit page)*/
-
     const [formData, setFormData] = useState({
         itemName: '',
         description: '',
@@ -43,6 +34,37 @@ export default function Sell(){
     })
 
     const conditionArray: Array<string> = ['New', 'Excellent', 'Very Good', 'Fair', 'Poor']
+
+    /* Read in item id from url when sent from edit button */
+    let params = new URLSearchParams(document.location.search);
+    let itemIdForEdit = params.get('id');
+
+    useEffect(()=>{
+        async function fetchItem() {
+            const { data, error} =  await supabase
+            .from('auction_Items')
+            .select()
+            .eq('itemId', itemIdForEdit)
+            .single()
+            /* fill if the item id is found in database (acts as a edit form) */
+            if(data){
+                // console.log(data)
+                setFormData(data)
+            }else{
+                /* If not, form is empty (acts as a add form) */
+                setFormData({
+                    itemName: '',
+                    description: '',
+                    condition: '',
+                    category: 'House Deco',
+                    certified: false,
+                    startPrice: '',
+                    image: File || null,
+                })
+            }
+        }
+        fetchItem()
+    },[itemIdForEdit])
     
     {/* TODO:Add Regex ? , RLS, redirect later...*/}
 
@@ -106,7 +128,7 @@ export default function Sell(){
             console.log("Error" + error.message)
         }
         if(data){
-            console.log(data)
+            // console.log(data)
             redirect('/items')
         }
     }
@@ -116,6 +138,7 @@ export default function Sell(){
             <p>Here Users can fill out form to sell items</p>
 
             <form action="" className="auction_seller_form" onSubmit={handleSubmit}>
+                { itemIdForEdit && <p>Edit Page</p>}
                 <h1> Auction Item Form</h1>
                 {/* Name */}
                 <label htmlFor="itemName">Item Name</label>
@@ -133,6 +156,7 @@ export default function Sell(){
                                 <div key={c}>
                                     <input type="radio" id={c} name="condition" 
                                     value={c}
+                                    checked = {formData.condition === c}
                                     onChange={(e)=>{setFormData({...formData, condition: e.target.value})}} 
                                     required/>
                                     <label htmlFor={c}>{c}</label>
@@ -143,7 +167,7 @@ export default function Sell(){
 
                 {/* category */}
                 <label htmlFor="itemCategory">Choose a category:</label>
-                <select name="itemCategory" id="itemCategory" value={formData.category} onChange={handleCategory}>
+                <select name="itemCategory" id="itemCategory" value={formData.category} onChange={handleCategory} required>
                     <option value="House Deco">House Deco</option>
                     <option value="cat. 2">Cat. 2</option>
                     <option value="cat. 3">Cat. 3</option>
@@ -151,7 +175,7 @@ export default function Sell(){
 
                 {/* Cerified */}
                 <label htmlFor="itemCert">Certified:</label>
-                <select name="itemCert" id="itemCert" onChange={handleCeritify}>
+                <select name="itemCert" id="itemCert" onChange={handleCeritify} value={formData.certified} required>
                     <option value="true">Yes</option>
                     <option value="false">No</option>
                 </select>
@@ -159,10 +183,11 @@ export default function Sell(){
                 {/* TOOD: Add a file input for a ceritification proof */}
                 {/* Base Price / Start Bid */}
                 <label htmlFor="itemPrice">Base Price: $</label>
-                <input type="number"id="itemPrice" value={formData.startPrice} step={0.01} onChange={(e)=>setFormData({...formData, startPrice: Number(e.target.value)})} />
+                <input type="number"id="itemPrice" value={formData.startPrice} step={0.01} onChange={(e)=>setFormData({...formData, startPrice: Number(e.target.value)})} required />
 
                 {/* upload image */}
-                <input type="file" accept="image/*" onChange={handleImageFileChange} />
+                <p>(Please Reupload Image)</p>
+                <input type="file" accept="image/*" onChange={handleImageFileChange} required />
                {/* Submit button */}
                 <button type="submit"> Submit</button>
             </form>
