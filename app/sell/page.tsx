@@ -2,7 +2,7 @@
 
 import { ChangeEvent, useEffect, useState } from "react"
 import supabase from "../config/supabaseClient"
-import {redirect} from 'next/navigation'
+import {redirect, useParams, useSearchParams} from 'next/navigation'
 
 async function getUserid() {
     const {data : {user}, error} = await supabase.auth.getUser()
@@ -20,6 +20,7 @@ export default function Sell(){
     /* TODO: 
     ** (1) Redo upload work [done]
     ** (2) Update items work [wip...]
+    ** - change from Edit -> sell form clear
     ** (3) add policies for update
     */
     
@@ -36,21 +37,25 @@ export default function Sell(){
     const conditionArray: Array<string> = ['New', 'Excellent', 'Very Good', 'Fair', 'Poor']
 
     /* Read in item id from url when sent from edit button */
-    let params = new URLSearchParams(document.location.search);
+    let params = new URLSearchParams(window.location.search);
     let itemIdForEdit = params.get('id');
 
+    /* working on sideeffects...*/
+    const {id} = useParams()
     useEffect(()=>{
         async function fetchItem() {
-            const { data, error} =  await supabase
-            .from('auction_Items')
-            .select()
-            .eq('itemId', itemIdForEdit)
-            .single()
-            /* fill if the item id is found in database (acts as a edit form) */
-            if(data){
-                // console.log(data)
-                setFormData(data)
-            }else{
+            if(itemIdForEdit){
+                const { data, error} =  await supabase
+                .from('auction_Items')
+                .select()
+                .eq('itemId', itemIdForEdit)
+                .single()
+                /* fill if the item id is found in database (acts as a edit form) */
+                if(data){
+                    setFormData(data)
+                }
+            }
+            else{
                 /* If not, form is empty (acts as a add form) */
                 setFormData({
                     itemName: '',
@@ -64,9 +69,12 @@ export default function Sell(){
             }
         }
         fetchItem()
-    },[itemIdForEdit])
+    },[itemIdForEdit, id])
     
     {/* TODO:Add Regex ? , RLS, redirect later...*/}
+
+    // console.log(window.location.search)
+
 
     const handleImageFileChange = (e:ChangeEvent<HTMLInputElement>)=>{
         if(e.target.files && e.target.files.length > 0){
@@ -128,7 +136,15 @@ export default function Sell(){
             console.log("Error" + error.message)
         }
         if(data){
-            // console.log(data)
+            setFormData({
+                itemName: '',
+                description: '',
+                condition: '',
+                category: 'House Deco',
+                certified: false,
+                startPrice: '',
+                image: File || null,
+            })
             redirect('/items')
         }
     }

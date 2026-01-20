@@ -50,6 +50,7 @@ export default function UserProfile () {
         <div>
 
             <p>{`User Profile: `}</p>
+            <Link href="/sell"><button>Sell a item</button> </Link>
             <div>
                 { data && (
                     <div>
