@@ -17,13 +17,7 @@ async function getUserid() {
 }
 
 export default function Sell(){
-    /* TODO: 
-    ** (1) Redo upload work [done]
-    ** (2) Update items work [wip...]
-    ** - change from Edit -> sell form clear
-    ** (3) add policies for update
-    */
-    
+
     const [formData, setFormData] = useState({
         itemName: '',
         description: '',
@@ -40,7 +34,6 @@ export default function Sell(){
     let params = new URLSearchParams(window.location.search);
     let itemIdForEdit = params.get('id');
 
-    /* working on sideeffects...*/
     const {id} = useParams()
     useEffect(()=>{
         async function fetchItem() {
@@ -72,9 +65,6 @@ export default function Sell(){
     },[itemIdForEdit, id])
     
     {/* TODO:Add Regex ? , RLS, redirect later...*/}
-
-    // console.log(window.location.search)
-
 
     const handleImageFileChange = (e:ChangeEvent<HTMLInputElement>)=>{
         if(e.target.files && e.target.files.length > 0){

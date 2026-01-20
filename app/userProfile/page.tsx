@@ -28,7 +28,6 @@ export default function UserProfile () {
         }
         if(data){
            setData(data)
-        //    console.log(data)
         }
     }
         fetchUserItems()

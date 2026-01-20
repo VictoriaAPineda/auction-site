@@ -51,7 +51,6 @@ export default function Navbar(){
                         <Link href="/items"><li>Auction Gallery</li></Link>
     
                         {/* view if logged in*/}
-                        {/* {loggedin && <Link href="/sell"><li>Sell</li></Link>} */}
                         {loggedin &&  <Link href="/userProfile">[Profile]</Link>}
                        
                         {/* Toggle login / logout depending on status */}
