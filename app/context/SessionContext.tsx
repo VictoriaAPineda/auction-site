@@ -14,6 +14,7 @@ const SessionContext = ({ children } :{children:ReactNode}) => {
             const currentSession = await supabase.auth.getSession();
             // supbase gets the sesssion (value : if user is logged in OR not)
             setSession(currentSession);
+            setLoading(false)
         }
         useEffect(()=>{
             fetchSession();
@@ -22,11 +23,12 @@ const SessionContext = ({ children } :{children:ReactNode}) => {
             const {data: authListener} = supabase.auth.onAuthStateChange(
                 (_event, session)=> {
                     setSession(session)
+                    setLoading(false)
                 }
             );
             return() => {
                 // clean up after subscription to prevent 
-                // memnory leaks
+                // memory leaks
                 authListener.subscription.unsubscribe();
             }
         },[])

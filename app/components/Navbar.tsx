@@ -5,34 +5,41 @@ import { useContext, useEffect, useState } from "react";
 import { redirect } from "next/navigation";
 import { Session } from "../context/SessionContext";
 
-{/* Supabse -> Auth -> Sign in/Provideres -> unselect confirm email 
-** or will get a Null bug for session info */}
-// async function getUserid() {
-//     const {data, error} = await supabase.auth.getUser()
-//     return data.user.id  
-// }
-//  const id= getUserid()
-//  console.log(id)
-
+/* Get info of current user */
+async function getUserEmail() {
+    const {data, error} = await supabase.auth.getUser()
+    if(error || null){
+        /* Receive error: AuthSessionMissingError: Auth session missing! 
+        ** if no user is logged in (normal) */
+        console.log(error)
+        return null
+    }
+    return data.user.email
+}
 
 export default function Navbar(){
-    // Track the sessions of different users
-    const session = useContext(Session)
 
+    // Track the sessions of different users
+    const {session, loading} = useContext(Session)
     const [loggedin, setisLoggedIn] = useState(false);
+    const [userEmail, setUserEmail] = useState(null);
 
     useEffect(()=>{
-        if(session.session == null){
-            setisLoggedIn(false)
-        }else{
+        /* if a session is active */ 
+        if(loading != true && session !=undefined){
             setisLoggedIn(true)
+            setUserEmail(getUserEmail())
+        }else{
+            setisLoggedIn(false)
+            setUserEmail(null)
         }
     },[session])
 
     const logout = async () =>{
+        setisLoggedIn(false)
+        setUserEmail(null)
         await supabase.auth.signOut();
-        // window.location.reload();
-        // redirect('/items') // put homepage later...
+        redirect('/items') 
     }
 
     return(
@@ -54,7 +61,8 @@ export default function Navbar(){
                             <Link href="/login"><li className="logBtn">Login</li></Link> 
                         )}
                     </div>
-                    {/* {loggedin && <li>User: {session.session.user.email}</li> } */}
+                    {/* Displays current user email logged in */}
+                    { loggedin && <li>User: {userEmail}</li>}
                 </div>   
             </nav>
         </section>
