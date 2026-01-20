@@ -22,7 +22,7 @@ const ItemDetails = () => {
             }
             if(data){
                setData(data)
-               console.log(data)
+            //    console.log(data)
             }
         }
         fetchItem()
@@ -38,7 +38,8 @@ const ItemDetails = () => {
             <p>{data.certified}</p>
             <p>{data.condition}</p>
             <p>{data.description}</p>
-            <Image src={data.image} alt="item image" width={150} height={150} loading="eager" className="itemImage" />
+           
+            { data.image && <Image src={data.image} alt="item image" width={150} height={150} loading="eager" className="itemImage" />}
 
           
         </section>

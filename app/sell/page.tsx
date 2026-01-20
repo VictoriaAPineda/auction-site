@@ -22,44 +22,33 @@ export default function Sell(){
     // let itemIdForEdit = params.get('id');
     // console.log(itemIdForEdit)
     // const [data, setData] = useState<any>();
-
-    // useEffect(()=>{
-    //     const fetchItemDetails = async () =>{
-    //         const {data, error} = await supabase
-    //         .from('auction_Items')
-    //         .select()
-    //         .eq('itemId', itemIdForEdit)
-    //         if(error){
-    //             console.log("Error: " ,error)
-    //         }
-    //         if(data != null){
-    //            setData(data)
-    //            console.log(data)
-    //         }
-    //     }
-    //     fetchItemDetails()
-    // },[itemIdForEdit])
-
-    // console.log(data)
+ 
+    /* TODO: 
+    ** (1) Redo upload work [done]
+    ** (2) Update items work [wip...]
+    ** (3) add policies for update
+    */
     
     /* Create states mananager/dispatcher ?
     ** want to prefill inputs if there is any data on the item (use this as a edit page)*/
 
-    const [itemName, setItemName] = useState('')
-    const [itemPrice, setItemPrice] = useState<number|string>('')
-    const [itemDescription, setItemDescription] = useState('')
-    const [condition, setCondition] = useState('')
-    const [itemImage, setItemImage] = useState<File | null>(null)
-    const [category, setCategory] = useState('House Deco')
-    const [certified, setCertified] = useState<boolean>(false)
+    const [formData, setFormData] = useState({
+        itemName: '',
+        description: '',
+        condition: '',
+        category: 'House Deco',
+        certified: false,
+        startPrice: '',
+        image: File || null,
+    })
 
-    const conditionArray: Array<string> = ['New', 'Excellent', 'Very Good', 'Fair', 'Poor'] 
-
-    {/* TODO:A  Addd Regex , RLS, redirect later...*/}
+    const conditionArray: Array<string> = ['New', 'Excellent', 'Very Good', 'Fair', 'Poor']
+    
+    {/* TODO:Add Regex ? , RLS, redirect later...*/}
 
     const handleImageFileChange = (e:ChangeEvent<HTMLInputElement>)=>{
         if(e.target.files && e.target.files.length > 0){
-            setItemImage(e.target.files[0])
+           setFormData({...formData, image: e.target.files[0]})
         }
     }
 
@@ -76,30 +65,40 @@ export default function Sell(){
         const {data} = await supabase.storage
             .from('item-image') 
             .getPublicUrl(filePath)
-        
+
         return data.publicUrl;
     };
+   
     const handleCategory = (e:any) => {
-        setCategory(e.target.value)
+        let {value} = e.target;
+        setFormData({...formData, category: value})
     }
+   
     const handleCeritify = (e:any) =>{
+        let {name, value} = e.target;
         // Convert to a boolean
-        const val = JSON.parse(e.target.value)
-        setCertified(val)
+        value = JSON.parse(e.target.value)
+        setFormData( {...formData, certified: value})
     }
 
     const handleSubmit = async(e:any)=>{
         e.preventDefault()
+        {/* user id to store the item under */}
         const uid = await getUserid()
 
         let imgUrl:string | null = null
-        if (itemImage) {
-            imgUrl = await uploadImg(itemImage)
+        if (formData.image) {
+            imgUrl = await uploadImg(formData.image)            
         }
-        
+        {/* Note:  variables before (...) get overwritten, place new upadted
+        variables AFTER otherwise get {} for image */}
         const {data, error} = await supabase
             .from('auction_Items')
-            .insert({itemName, condition, category, certified, startPrice:itemPrice, image:imgUrl, description:itemDescription, user_id: uid })
+            .upsert({
+                user_id: uid,
+                ...formData,
+                image: imgUrl,
+             })
             .select()
             .single()
 
@@ -120,11 +119,11 @@ export default function Sell(){
                 <h1> Auction Item Form</h1>
                 {/* Name */}
                 <label htmlFor="itemName">Item Name</label>
-                <input type="text" id="itemName" value={itemName} onChange={(e)=>{setItemName(e.target.value)}} required/>
+                <input type="text" id="itemName" value={formData.itemName} onChange={(e)=> setFormData({...formData, itemName: e.target.value})} required/>
 
                 {/* Description */}
                 <label htmlFor="itemDescription">Item Description: </label>
-                <input type="text" id="itemDescription" value={itemDescription} onChange={(e)=>{setItemDescription(e.target.value)}} required/>
+                <input type="text" id="itemDescription" value={formData.description} onChange={(e)=>setFormData({...formData, description: e.target.value})} required/>
 
                 {/* Item condition */}
                 <fieldset className="conditionField">
@@ -132,7 +131,10 @@ export default function Sell(){
                         <div className="conditionContainer">
                             {conditionArray.map((c:string)=>(
                                 <div key={c}>
-                                    <input type="radio" id={c} name="condition" value={c} onChange={(e)=>{setCondition(e.target.value)}} required/>
+                                    <input type="radio" id={c} name="condition" 
+                                    value={c}
+                                    onChange={(e)=>{setFormData({...formData, condition: e.target.value})}} 
+                                    required/>
                                     <label htmlFor={c}>{c}</label>
                                 </div>
                             ))}
@@ -141,7 +143,7 @@ export default function Sell(){
 
                 {/* category */}
                 <label htmlFor="itemCategory">Choose a category:</label>
-                <select name="itemCategory" id="itemCategory" value={category} onChange={handleCategory}>
+                <select name="itemCategory" id="itemCategory" value={formData.category} onChange={handleCategory}>
                     <option value="House Deco">House Deco</option>
                     <option value="cat. 2">Cat. 2</option>
                     <option value="cat. 3">Cat. 3</option>
@@ -157,7 +159,7 @@ export default function Sell(){
                 {/* TOOD: Add a file input for a ceritification proof */}
                 {/* Base Price / Start Bid */}
                 <label htmlFor="itemPrice">Base Price: $</label>
-                <input type="number"id="itemPrice" value={itemPrice} step={0.01} onChange={(e)=>{setItemPrice(Number(e.target.value))}} />
+                <input type="number"id="itemPrice" value={formData.startPrice} step={0.01} onChange={(e)=>setFormData({...formData, startPrice: Number(e.target.value)})} />
 
                 {/* upload image */}
                 <input type="file" accept="image/*" onChange={handleImageFileChange} />
