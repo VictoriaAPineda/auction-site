@@ -3,7 +3,7 @@
 import { Key, useState } from "react"
 
 interface FilterSelection {
-    filterType: string[],
+    filterType: string,
     subfilter: string[];
 }
 
