@@ -1,0 +1,16 @@
+[
+    {"filter": "category", 
+        "subfilter" : [
+           "category 01", 
+            "category 02"
+        ]
+    },
+    {"filter": "auction room", 
+    "subfilter" : [
+       "room 01", 
+        "room 02"
+        ]
+    }
+
+
+]

@@ -4,6 +4,7 @@ import { ChangeEvent, useEffect, useState } from "react"
 import supabase from "../config/supabaseClient"
 import {redirect, useParams, useSearchParams} from 'next/navigation'
 
+
 async function getUserid() {
     const {data : {user}, error} = await supabase.auth.getUser()
     if(user){
@@ -30,7 +31,8 @@ export default function Sell(){
 
     const conditionArray: Array<string> = ['New', 'Excellent', 'Very Good', 'Fair', 'Poor']
 
-    /* Read in item id from url when sent from edit button */
+    /* Read in item id from url when sent from edit button 
+    or document? */
     let params = new URLSearchParams(window.location.search);
     let itemIdForEdit = params.get('id');
 
@@ -174,6 +176,7 @@ export default function Sell(){
                 {/* category */}
                 <label htmlFor="itemCategory">Choose a category:</label>
                 <select name="itemCategory" id="itemCategory" value={formData.category} onChange={handleCategory} required>
+                    {/* TODO: Read in the categories from json file instead...*/}
                     <option value="House Deco">House Deco</option>
                     <option value="cat. 2">Cat. 2</option>
                     <option value="cat. 3">Cat. 3</option>

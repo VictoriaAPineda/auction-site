@@ -53,9 +53,7 @@ body {
   border: 1px solid purple;
 }
 
-
 #itemGallery{
-  border: 1px solid red;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -142,6 +140,31 @@ body {
    }
 }
 
+
+/* filrer menus */
+.filter-side-menu{
+    // border: 1px solid green;
+    width:500px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+
+  .filter-container{
+
+    // border: 1px solid red;
+   
+    .filter-type{
+      display: flex;
+      background-color: deepskyblue;
+    }
+    .filterBy{
+      display: flex;
+      border: 1px solid black;
+      flex-direction: column;
+    }
+    
+  }
+}
 
 
 
