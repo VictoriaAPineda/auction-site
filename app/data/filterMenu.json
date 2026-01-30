@@ -2,13 +2,15 @@
     {"filter": "category", 
         "subfilter" : [
            "category 01", 
-            "category 02"
+            "category 02", 
+            "category 03"
         ]
     },
     {"filter": "auction room", 
     "subfilter" : [
        "room 01", 
-        "room 02"
+        "room 02",
+        "room 03"
         ]
     }
 

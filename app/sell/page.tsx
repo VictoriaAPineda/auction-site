@@ -3,6 +3,7 @@
 import { ChangeEvent, useEffect, useState } from "react"
 import supabase from "../config/supabaseClient"
 import {redirect, useParams, useSearchParams} from 'next/navigation'
+import filterMenus from "../data/filterMenu.json"
 
 
 async function getUserid() {
@@ -141,6 +142,9 @@ export default function Sell(){
         }
     }
 
+    /* From json data file */
+    const categories =  filterMenus.find(i => i.filter === "category");
+
     return(
         <section id="sell_container">
             <p>Here Users can fill out form to sell items</p>
@@ -177,9 +181,11 @@ export default function Sell(){
                 <label htmlFor="itemCategory">Choose a category:</label>
                 <select name="itemCategory" id="itemCategory" value={formData.category} onChange={handleCategory} required>
                     {/* TODO: Read in the categories from json file instead...*/}
-                    <option value="House Deco">House Deco</option>
-                    <option value="cat. 2">Cat. 2</option>
-                    <option value="cat. 3">Cat. 3</option>
+                    {
+                        categories?.subfilter.map((cat, index)=>(
+                            <option value={cat} key={index}>{cat}</option>
+                        ))
+                    }
                 </select>
 
                 {/* Cerified */}

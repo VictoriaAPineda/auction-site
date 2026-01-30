@@ -1,7 +1,7 @@
 'use client'
 import ItemCard from "../components/ItemCard";
 import supabase from "../config/supabaseClient";
-import { use, useEffect, useState } from "react";
+import { use, useEffect, useMemo, useState } from "react";
 import filterMenus from "../data/filterMenu.json";
 import AccordionFilter from "../components/AccordionFilter";
 
@@ -20,8 +20,11 @@ export interface AuctionItem {
 
 /* This page will display a gallery of items that will run in auction */
 export default function Items () {
+
     const [fetchError, setFetchError] = useState<any>(null)
     const [items, setItems] = useState<any>(null)
+    const [checkboxFilter, setCheckFilter] = useState<String>('')
+    const [filteredResults, setFilteredResults] = useState(null)
 
     useEffect(()=>{
         const fetchItems = async () => {
@@ -57,6 +60,37 @@ export default function Items () {
             })
     },[])
     
+    /* Records what checkboxes users select to apply filters
+    ** TODO: adjust what is shown
+     */
+    const handleFilterSelection = (event) => {
+        const {value, checked} = event.target;
+        /* checked boxes clicked, are added to filter state */
+        if(checked){
+            // setFilter( prev => [...prev, value]);
+            return setCheckFilter([...checkboxFilter, value])
+        }else{
+            return setCheckFilter( prev => prev.filter(f => f !== value))
+        }
+    }
+    /* TODO: refresh the page upon filters applied. unlcik a filter should redo  */
+
+    // useEffect(()=>{
+    //     if(checkboxFilter.length === 0){
+    //         setFilteredResults(items)
+    //         console.log("No criteroa set")
+    //     }else{
+
+    //     }
+      
+      
+    // },[checkboxFilter])
+
+    // console.log("results of filter(s): ", filteredResults)
+    
+    console.log("Filter(s) applied:", checkboxFilter);
+  
+
     return(
         <section id="itemGallery">
 
@@ -64,7 +98,7 @@ export default function Items () {
             <div className="filter-side-menu">
                 { filterMenus.map(({filter, subfilter}) => (
                     <div key={filter}>
-                        <AccordionFilter filterType={filter} subfilter={subfilter}/>
+                        <AccordionFilter filterType={filter} subfilter={subfilter} onFilterClick={handleFilterSelection} />
                     </div>
                 ))}
             </div>
