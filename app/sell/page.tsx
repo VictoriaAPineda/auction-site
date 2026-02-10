@@ -1,10 +1,7 @@
 'use client'
-
 import { ChangeEvent, useEffect, useState } from "react"
 import supabase from "../config/supabaseClient"
-import {redirect, useParams, useSearchParams} from 'next/navigation'
-import filterMenus from "../data/filterMenu.json"
-
+import {redirect, useParams} from 'next/navigation'
 
 async function getUserid() {
     const {data : {user}, error} = await supabase.auth.getUser()
@@ -18,13 +15,16 @@ async function getUserid() {
     }
 }
 
+/* Manually add room # in supabse. This will be added to admin later on in auth of form submissons part of project.
+Admin will 'approve' of form then assign item's 'room' where it will be auctioned */
+
 export default function Sell(){
 
     const [formData, setFormData] = useState({
         itemName: '',
         description: '',
         condition: '',
-        category: 'House Deco',
+        category: 'category 01',
         certified: false,
         startPrice: '',
         image: File || null,
@@ -57,7 +57,7 @@ export default function Sell(){
                     itemName: '',
                     description: '',
                     condition: '',
-                    category: 'House Deco',
+                    category: 'category 01',
                     certified: false,
                     startPrice: '',
                     image: File || null,
@@ -133,7 +133,7 @@ export default function Sell(){
                 itemName: '',
                 description: '',
                 condition: '',
-                category: 'House Deco',
+                category: 'category 01',
                 certified: false,
                 startPrice: '',
                 image: File || null,
@@ -141,9 +141,6 @@ export default function Sell(){
             redirect('/items')
         }
     }
-
-    /* From json data file */
-    const categories =  filterMenus.find(i => i.filter === "category");
 
     return(
         <section id="sell_container">
@@ -179,13 +176,10 @@ export default function Sell(){
 
                 {/* category */}
                 <label htmlFor="itemCategory">Choose a category:</label>
-                <select name="itemCategory" id="itemCategory" value={formData.category} onChange={handleCategory} required>
-                    {/* TODO: Read in the categories from json file instead...*/}
-                    {
-                        categories?.subfilter.map((cat, index)=>(
-                            <option value={cat} key={index}>{cat}</option>
-                        ))
-                    }
+                <select name="itemCategory" id="itemCategory" value={formData.category} onChange={handleCategory} required>          
+                    <option value="category 01">category 01</option>
+                    <option value="category 02">category 02</option>
+                    <option value="category 03">category 03</option>
                 </select>
 
                 {/* Cerified */}

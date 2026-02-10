@@ -21,11 +21,13 @@ export default function Items () {
 
     const [fetchError, setFetchError] = useState<any>(null)
     const [items, setItems] = useState<any>(null)
+    /* holds the sub category values in each object's array  */
     const [selectedFilters, setSelectedFilters] = useState<any>({categories:[], rooms:[]})
+    /* will hold unique values to display check boxes for user to click on to filter */
     const [categories, setCategories] = useState([])
     const [rooms, setRooms] = useState([])
 
-
+    /* Fetch data from Supbase data base and store in items state */
     useEffect(()=>{
         const fetchItems = async () => {
             const {data, error} = await supabase
@@ -44,12 +46,12 @@ export default function Items () {
         fetchItems()
     },[])
 
-    /* scans and returns no repeat of values of the data source (supabase db) and field(column name from db) */
+    /* scans input and returns unique values from the data source (supabase db) from a field (column name from db) */
     const getUniqueFilterOptions = (data, field) => {
         return [...new Set(data.map(i => i[field]))]
        
     }
-    /* after scanning db for unique values, use these to create checkbox list*/
+    /* after scanning db stores only unique values (to avoid repeating checkboxes for display ) */
     useEffect(()=>{
         if(items){
             setCategories(getUniqueFilterOptions(items, 'category'))
@@ -72,7 +74,7 @@ export default function Items () {
                 console.log("Subscription: " , status)
             })
     },[])
-    
+    /* when user clicks on a check box, tracks what is clicked and from which filter type (ex: rooms/categories)*/
     const handleFilterSelection = (e, filterType) => {
         const {value, checked} = e.target;
 
@@ -86,14 +88,16 @@ export default function Items () {
         })
     }
 
+    /* organizes updated list of items to display based on filter selections */
     const filterItems = useMemo (()=> {
         if(items){
             return items.filter( i => {
+                /* category selection either is not selected OR has selections from the group */
                 const categoryMatch = selectedFilters.categories.length === 0 ||
                     selectedFilters.categories.includes(i.category)
-
+                /* room selection either is not selected OR has selections from the group */
                 const roomMatch = selectedFilters.rooms.length === 0 || selectedFilters.rooms.includes(i.auctionRoom)
-    
+                /* both category AND room have their selections compared and appplies the AND logic when displaying the result */
                 return  categoryMatch && roomMatch
             })
         }
