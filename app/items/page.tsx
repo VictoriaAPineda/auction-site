@@ -16,16 +16,21 @@ export interface AuctionItem {
     user_id: string
 }
 
+interface Filters {
+    categories: string[],
+    rooms:string[]
+}
+
 /* This page will display a gallery of items that will run in auction */
 export default function Items () {
 
     const [fetchError, setFetchError] = useState<any>(null)
     const [items, setItems] = useState<any>(null)
-    /* holds the sub category values in each object's array  */
-    const [selectedFilters, setSelectedFilters] = useState<any>({categories:[], rooms:[]})
+    /* holds the filters and their values  */
+    const [selectedFilters, setSelectedFilters] = useState<Filters>({categories:[], rooms:[]})
     /* will hold unique values to display check boxes for user to click on to filter */
-    const [categories, setCategories] = useState([])
-    const [rooms, setRooms] = useState([])
+    const [categories, setCategories] = useState<string[]>([])
+    const [rooms, setRooms] = useState<string[]>([])
 
     /* Fetch data from Supbase data base and store in items state */
     useEffect(()=>{
@@ -47,7 +52,7 @@ export default function Items () {
     },[])
 
     /* scans input and returns unique values from the data source (supabase db) from a field (column name from db) */
-    const getUniqueFilterOptions = (data, field) => {
+    const getUniqueFilterOptions = (data:[], field:string) => {
         return [...new Set(data.map(i => i[field]))]
        
     }
@@ -75,14 +80,16 @@ export default function Items () {
             })
     },[])
     /* when user clicks on a check box, tracks what is clicked and from which filter type (ex: rooms/categories)*/
-    const handleFilterSelection = (e, filterType) => {
+    const handleFilterSelection = (e:Event, filterType:string) => {
         const {value, checked} = e.target;
 
         setSelectedFilters( prevFilters => {
             const currFilters = prevFilters[filterType]
             if(checked){
+                /* ex: rooms: [room01, added values here] is added to the current filter type array[]  */
                 return {...prevFilters, [filterType]:[...currFilters,value]} 
             }else{
+                /* checkboxes not checked - won't display items of that category */
                 return{...prevFilters, [filterType]:currFilters.filter(f=>f !=value) }
             }
         })
@@ -94,6 +101,7 @@ export default function Items () {
             return items.filter( i => {
                 /* category selection either is not selected OR has selections from the group */
                 const categoryMatch = selectedFilters.categories.length === 0 ||
+                    /* selected categories must be included in displayed items properties */
                     selectedFilters.categories.includes(i.category)
                 /* room selection either is not selected OR has selections from the group */
                 const roomMatch = selectedFilters.rooms.length === 0 || selectedFilters.rooms.includes(i.auctionRoom)
