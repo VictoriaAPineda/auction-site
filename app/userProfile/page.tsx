@@ -5,6 +5,8 @@ import { Session } from "../context/SessionContext"
 import supabase from "../config/supabaseClient";
 import { AuctionItem } from "../items/page";
 import Link from "next/link";
+
+
 async function getUserid() {
     const {data: {user}, error} = await supabase.auth.getUser()
     return user?.id 
@@ -15,7 +17,7 @@ const uid = await getUserid();
 export default function UserProfile () {
 
     const [data, setData] = useState<any>([])
-   
+
     {/* retrive user's own items*/}
     useEffect(()=>{
         const fetchUserItems = async () => {
@@ -49,6 +51,8 @@ export default function UserProfile () {
         <div>
 
             <p>{`User Profile: `}</p>
+            <p>Change User Display Name</p>
+            {/* <p>Current: {getUserEmail()}</p> */}
             <Link href="/sell"><button>Sell a item</button> </Link>
             <div>
                 { data && (

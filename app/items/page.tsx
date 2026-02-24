@@ -112,6 +112,7 @@ export default function Items () {
         
     },[items, selectedFilters])
 
+    // console.log(selectedFilters)
     return(
         <section id="itemGallery">
 

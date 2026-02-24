@@ -6,38 +6,42 @@ import { redirect } from "next/navigation";
 import { Session } from "../context/SessionContext";
 
 /* Get info of current user */
-async function getUserEmail() {
+async function getUserDisplayName() {
     const {data, error} = await supabase.auth.getUser()
+    // console.log(data.user?.user_metadata.username)
+
+
     if(error || null){
         /* Receive error: AuthSessionMissingError: Auth session missing! 
         ** if no user is logged in (normal) */
         console.log(error)
         return null
     }
-    return data.user.email
+    return data.user?.user_metadata.username
 }
+
 
 export default function Navbar(){
 
     // Track the sessions of different users
     const {session, loading} = useContext(Session)
     const [loggedin, setisLoggedIn] = useState(false);
-    const [userEmail, setUserEmail] = useState(null);
+    const [userDisplayName, setUserDisplayName] = useState(null);
 
     useEffect(()=>{
         /* if a session is active */ 
         if(loading != true && session !=undefined){
             setisLoggedIn(true)
-            setUserEmail(getUserEmail())
+            setUserDisplayName(getUserDisplayName())
         }else{
             setisLoggedIn(false)
-            setUserEmail(null)
+            setUserDisplayName(null)
         }
     },[session])
 
     const logout = async () =>{
         setisLoggedIn(false)
-        setUserEmail(null)
+        setUserDisplayName(null)
         await supabase.auth.signOut();
         redirect('/items') 
     }
@@ -61,7 +65,7 @@ export default function Navbar(){
                         )}
                     </div>
                     {/* Displays current user email logged in */}
-                    { loggedin && <li>User: {userEmail}</li>}
+                    { loggedin && <li>User: {userDisplayName}</li>}
                 </div>   
             </nav>
         </section>

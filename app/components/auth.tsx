@@ -9,16 +9,21 @@ export default function Auth(){
     const [isSignUp, setIsSignUp] = useState(false)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [username, setUsername] = useState('')
 
     const handleSubmit = async (e:FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         // Are they signing up? (new user)
         if(isSignUp){
-            const {error :signUpError} = await supabase.auth.signUp({
-                email, password,
+            const {error :signUpError, data} = await supabase.auth.signUp({
+                email, 
+                password,
+                options: {
+                    data: { username : username},
+                },
             });
             if(signUpError){
-                console.log("There was a error signing up", signUpError.message);
+                console.log("There was a error signing up: ", signUpError.message);
                 return;
             }
             redirect('/items')
@@ -41,6 +46,10 @@ export default function Auth(){
         <div>
             <h2>{isSignUp ? "Sign Up" : "Sign In"}</h2>
             <form onSubmit={handleSubmit}>
+                <input type="text" placeholder="username" 
+                    value={username}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => 
+                        setUsername(e.target.value)}/>
                 <input type="email"
                     placeholder="Email"
                     value={email}
